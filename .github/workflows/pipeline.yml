@@ -10,33 +10,33 @@ jobs:
 
     steps:
       - name: Checkout code
-      uses: actions/checkout@v4
-      #pulls the repo code into the runner
+        uses: actions/checkout@v4
+        #pulls the repo code into the runner
 
       - name: Set up Docker
-      uses: docker/setup-buildx-action@v3
-      #prepares Docker environment
+        uses: docker/setup-buildx-action@v3
+        #prepares Docker environment
 
       - name: Build Docker image
-      run: docker build -t cloud-pipeline .
-      # builds the Flask app into a container
+        run: docker build -t cloud-pipeline .
+        # builds the Flask app into a container
 
       - name: Run container
-      run: docker run -d -p 5000:5000 cloud-pipeline
-      # starts the container in background
+        run: docker run -d -p 5000:5000 cloud-pipeline
+        # starts the container in background
 
       - name: Wait for service
-      run: sleep 5
-      # gives Flask time to start
+        run: sleep 5
+        # gives Flask time to start
 
       - name: Test API
-      run: curl http://localhost:5000/health
-      # hits the API to make sure it works
+        run: curl http://localhost:5000/health
+        # hits the API to make sure it works
 
       - name: Show container logs
-      if: always()
-      run: docker logs cloud-pipeline-api
-      # prints logs even if a step fails
+        if: always()
+        run: docker logs cloud-pipeline-api
+        # prints logs even if a step fails
 
 
 
