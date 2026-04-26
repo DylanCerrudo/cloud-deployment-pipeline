@@ -1,0 +1,13 @@
+# .NET build output
+orchestrator/bin/
+orchestrator/obj/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment files
+.env
+
+# VS Code settings
+.vscode/
