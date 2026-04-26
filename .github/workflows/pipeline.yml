@@ -22,7 +22,7 @@ jobs:
         # builds the Flask app into a container
 
       - name: Run container
-        run: docker run -d -p 5000:5000 cloud-pipeline
+        run: docker run -d --name cloud-pipeline-api -p 5000:5000 cloud-pipeline
         # starts the container in background
 
       - name: Wait for service
@@ -30,7 +30,7 @@ jobs:
         # gives Flask time to start
 
       - name: Test API
-        run: curl http://localhost:5000/health
+        run: curl --fail http://localhost:5000/health
         # hits the API to make sure it works
 
       - name: Show container logs
