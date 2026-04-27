@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 
 class Program{
 
+    // Update with real ECS application URL
+    private static readonly string HealthUrl = "https://cl-efee49abace3432f8da171f88d2d9443.ecs.us-east-2.on.aws/health";
+
     static async Task Main(string[] args)
     {
         // Starting point for the script
         Console.WriteLine("Starting deployment orchestrator...");
 
-        // Clean up any previous run so the port is free and then hide it if there is no previous one
-        RunCommand("docker rm -f cloud-pipeline-api 2>/dev/null || true");
+        // Triggering a new ECS deployment so the service pulls the latest image
+        RunCommand("aws ecs update-service --cluster default --service cloud-pipeline-da4a --force-new-deployment --query 'service.{name:serviceName,status:status,running:runningCount,pending:pendingCount}' --output table");
 
-        // Start the Python API container in the background
-        RunCommand("docker run -d --name cloud-pipeline-api -p 5000:5000 cloud-pipeline");
-
-        // Give the container a few seconds to boot up before checking it 
-        await Task.Delay(3000);
+        Console.WriteLine("Waiting for ECS service to start updating...");
+        await Task.Delay(10000);       
 
         // Hit the health endpoint to confirm it's running
         Console.WriteLine("Checking service health...");
@@ -26,10 +26,10 @@ class Program{
         try
         {   
             using var client = new HttpClient();
-            var response = await client.GetStringAsync("http://localhost:5000/health");
+            var response = await client.GetStringAsync(HealthUrl);
 
             // Check if the API response actually says it's healthy
-            if (response.Contains("ok"))
+            if (response.Contains("ok") || response.Contains("healthy"))
             {
                 // API returned expected value, then deployment worked
                 Console.WriteLine("Deployment successful.");
@@ -54,7 +54,7 @@ class Program{
 
     static void RunCommand(string command){
 
-        // Runs shell commands (like docker) from C#
+        // Runs AWS CLI commands from C# so tool can control deployment steps
         var process = new Process();
 
         // Use bash so we can run full commands like in the terminal
