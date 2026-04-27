@@ -33,6 +33,24 @@ jobs:
         run: curl --fail http://localhost:5000/health
         # hits the API to make sure it works
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+        # lets GitHub Actions connect to AWS
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+        # logs Docker into AWS ECR
+      
+      - name: Push image to Amazon ECR 
+        run: |
+          docker tag cloud-pipeline:latest 071273296623.dkr.us-east-2.amazon.com/cloud-pipeline:latest
+          docker push 071273296623.dkr.ecr.us-east-2.amazon.com/cloud-pipeline:latest
+        # uploads the image to the ECR repo
+
       - name: Show container logs
         if: always()
         run: docker logs cloud-pipeline-api
