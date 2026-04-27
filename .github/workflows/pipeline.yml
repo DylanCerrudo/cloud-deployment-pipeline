@@ -47,7 +47,7 @@ jobs:
       
       - name: Push image to Amazon ECR 
         run: |
-          docker tag cloud-pipeline:latest 071273296623.dkr.us-east-2.amazonaws.com/cloud-pipeline:latest
+          docker tag cloud-pipeline:latest 071273296623.dkr.ecr.us-east-2.amazonaws.com/cloud-pipeline:latest
           docker push 071273296623.dkr.ecr.us-east-2.amazonaws.com/cloud-pipeline:latest
         # uploads the image to the ECR repo
 
