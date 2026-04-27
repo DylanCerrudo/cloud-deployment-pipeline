@@ -13,8 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the app
 COPY . .
 
-# App runs on port 5000
-EXPOSE 5000
+# App runs on port 80 in ECS
+EXPOSE 80
 
 # Start the app
 CMD ["python", "app.py"]

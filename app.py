@@ -35,7 +35,7 @@ def health():
 
 if __name__ == "__main__":
     # Use environment variable for port (required for Docker/AWS compatibility)
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 80))
     
     # Bind to 0.0.0.0 so the app is accesible outside the container/VM
     app.run(host="0.0.0.0", port=port)
