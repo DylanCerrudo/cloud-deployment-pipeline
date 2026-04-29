@@ -4,7 +4,7 @@ import json
 import os
 from datetime import datetime, timezone
 
-# Initialize Flask app
+# Initialized Flask app
 app = Flask(__name__)
 
 # Configure basic logging(later integrates with CloudWatch in AWS)
@@ -19,7 +19,7 @@ def log_event(event, status, message):
     }
     app.logger.info(json.dumps(log_data))
 
-# Root endpoint - used to verify service is running
+# Root endpoint - used to verify if the service is running
 @app.route("/")
 def home():
     
@@ -32,7 +32,7 @@ def home():
         
     })
 
-# Health check endpoint - used by load balancers / monitoring tools
+# Health check endpoint - used by load balancers in AWS / monitoring tools
 @app.route("/health")
 def health():
     log_event("health_check", "ok", "Health endpoint was called")
@@ -44,7 +44,7 @@ def health():
 
 
 if __name__ == "__main__":
-    # Use environment variable for port (required for Docker/AWS compatibility)
+    # Use environment variable for port (this is required for Docker/AWS compatibility)
     port = int(os.environ.get("PORT", 80))
     
     # Bind to 0.0.0.0 so the app is accessible outside the container/VM
